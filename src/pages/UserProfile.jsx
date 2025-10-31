@@ -38,7 +38,7 @@ function UserProfile() {
   const fetchPhotos = async () => {
     try {
       const res = await axios.get("http://localhost:3000/photos");
-      const userPhotos = res.data.filter((p) => p.userId === Number(id));
+      const userPhotos = res.data.filter((p) => String(p.userId) === (id));
       setPhotos(userPhotos);
     } catch {
       toast.error("Failed to fetch photos");
@@ -58,7 +58,6 @@ function UserProfile() {
       return;
     }
 
-    
     const toBase64 = (file) =>
       new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -66,11 +65,12 @@ function UserProfile() {
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
       });
+    
 
     const base64Image = await toBase64(file);
 
     const newPhoto = {
-      userId: Number(id),
+      userId: id,
       image: base64Image,
       event,
       date,

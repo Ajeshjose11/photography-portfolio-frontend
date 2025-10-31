@@ -52,7 +52,7 @@ function Gallery() {
     
     const tempDiv = document.createElement("div");
     tempDiv.style.padding = "20px";
-    tempDiv.style.backgroundColor = "#111827"; // dark background
+    tempDiv.style.backgroundColor = "#111827";
 
     
     filteredPhotos.forEach((photo) => {

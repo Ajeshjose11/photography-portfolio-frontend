@@ -1,34 +1,41 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { FiSearch, FiUser,FiArrowLeft } from "react-icons/fi";
+import { FiSearch, FiUser, FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/users")
-      .then((res) => setUsers(res.data))
+      .then((res) => {
+        const allUsers = res.data;
+        const normalUsers = allUsers.filter((user) => user.role === "user");
+        setUsers(normalUsers);
+        setFilteredUsers(normalUsers);
+      })
       .catch((err) => console.error("Error fetching users:", err));
   }, []);
 
- 
-  const normalUsers = users.filter((user) => user.role === "user");
+  
+  const handleSearch = () => {
+    const query = search.toLowerCase().trim();
 
- 
-  const filteredUsers =
-    search.trim() === ""
-      ? normalUsers
-      : normalUsers.filter((user) => {
-        const query = search.toLowerCase();
-        return (
-          user.name?.toLowerCase() === query ||
-          user.email?.toLowerCase() === query ||
-          String(user.id) === query
-        );
-      });
+    if (query === "") {
+      setFilteredUsers(users);
+    } else {
+      const result = users.filter(
+        (user) =>
+          user.name?.toLowerCase().includes(query) ||
+          user.email?.toLowerCase().includes(query) ||
+          String(user.id).includes(query)
+      );
+      setFilteredUsers(result);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 px-6">
@@ -38,15 +45,15 @@ function Users() {
           className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-blue-400 border border-gray-700 hover:border-blue-400 transition"
         >
           <FiArrowLeft />
-          <span>Back to Users</span>
+          <span>Back to Dashboard</span>
         </Link>
       </div>
-      
+
       <h1 className="text-3xl font-bold text-blue-400 text-center mb-6">
-        Registered Users 
+        Registered Users
       </h1>
 
-      
+     
       <div className="flex items-center w-full max-w-md bg-gray-800 rounded-lg px-4 py-2 mb-8 border border-gray-700 focus-within:border-blue-400 transition">
         <FiSearch className="text-gray-400 mr-2" />
         <input
@@ -56,6 +63,12 @@ function Users() {
           onChange={(e) => setSearch(e.target.value)}
           className="bg-transparent outline-none w-full text-gray-200 placeholder-gray-500"
         />
+        <button
+          onClick={handleSearch}
+          className="ml-3 bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg text-sm text-white transition"
+        >
+          Search
+        </button>
       </div>
 
       
