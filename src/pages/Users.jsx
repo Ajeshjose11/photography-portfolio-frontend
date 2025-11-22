@@ -22,7 +22,7 @@ function Users() {
 
   
   const handleSearch = () => {
-    const query = search.toLowerCase().trim();
+    const query = search.toLowerCase();
 
     if (query === "") {
       setFilteredUsers(users);

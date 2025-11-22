@@ -118,7 +118,6 @@ function Gallery() {
     <>
     <Header/>
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 px-6">
-      {/* Title */}
       <h1 className="text-3xl font-bold text-blue-400 text-center mb-6">
         User Gallery 
       </h1>
