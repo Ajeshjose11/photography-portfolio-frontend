@@ -14,6 +14,8 @@ import {
 } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SERVER_URL } from "../services/serverURL";
+
 
 function UserProfile() {
   const { id } = useParams();
@@ -26,30 +28,32 @@ function UserProfile() {
   const [editingPhoto, setEditingPhoto] = useState(null);
   const [editData, setEditData] = useState({ event: "", date: "", location: "" });
 
-  
+
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/users/${id}`)
+      .get(`${SERVER_URL}/users/${id}`)
       .then((res) => setUser(res.data))
       .catch(() => toast.error("Failed to fetch user details"));
   }, [id]);
 
-  
+
+
   const fetchPhotos = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/photos");
-      const userPhotos = res.data.filter((p) => String(p.userId) === (id));
+      const res = await axios.get(`${SERVER_URL}/photos`);
+      const userPhotos = res.data.filter((p) => String(p.userId) === id);
       setPhotos(userPhotos);
     } catch {
       toast.error("Failed to fetch photos");
     }
   };
 
+
   useEffect(() => {
     fetchPhotos();
   }, [id]);
 
-  
+
   const handleUpload = async (e) => {
     e.preventDefault();
 
@@ -65,7 +69,7 @@ function UserProfile() {
         reader.onload = () => resolve(reader.result);
         reader.onerror = (error) => reject(error);
       });
-    
+
 
     const base64Image = await toBase64(file);
 
@@ -78,7 +82,7 @@ function UserProfile() {
     };
 
     try {
-      await axios.post("http://localhost:3000/photos", newPhoto);
+      await axios.post(`${SERVER_URL}/photos`, newPhoto);
       toast.success("Photo uploaded successfully!");
       setEvent("");
       setDate("");
@@ -93,7 +97,7 @@ function UserProfile() {
   const handleDelete = async (photoId) => {
     if (window.confirm("Delete this photo?")) {
       try {
-        await axios.delete(`http://localhost:3000/photos/${photoId}`);
+        await axios.delete(`${SERVER_URL}/photos/${photoId}`);
         toast.info("Photo deleted successfully!");
         fetchPhotos();
       } catch {
@@ -102,7 +106,7 @@ function UserProfile() {
     }
   };
 
-  
+
   const startEdit = (photo) => {
     setEditingPhoto(photo.id);
     setEditData({
@@ -112,10 +116,10 @@ function UserProfile() {
     });
   };
 
-  
+
   const saveEdit = async (photoId) => {
     try {
-      await axios.patch(`http://localhost:3000/photos/${photoId}`, editData);
+      await axios.patch(`${SERVER_URL}/photos/${photoId}`, editData);
       toast.success("Photo details updated!");
       setEditingPhoto(null);
       fetchPhotos();
@@ -131,7 +135,7 @@ function UserProfile() {
     <div className="min-h-screen bg-gray-900 text-white px-6 md:px-16 py-10 relative">
       <ToastContainer position="top-center" autoClose={2000} />
 
-      
+
       <div className="absolute top-6 left-6">
         <Link
           to="/users"
@@ -142,13 +146,13 @@ function UserProfile() {
         </Link>
       </div>
 
-      
+
       <div className="text-center mb-10">
         <h1 className="text-3xl font-bold text-blue-400 mb-2">{user.name}</h1>
         <p className="text-gray-400 text-lg">{user.email}</p>
       </div>
 
-      
+
       <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 shadow-lg mb-10">
         <h2 className="text-2xl mb-4 font-semibold flex items-center gap-2">
           <FiUpload /> Upload New Photo
@@ -193,7 +197,7 @@ function UserProfile() {
         </form>
       </div>
 
-      
+
       <h2 className="text-2xl font-semibold mb-4">Uploaded Photos</h2>
       {photos.length === 0 ? (
         <p className="text-gray-400">No photos uploaded yet.</p>
