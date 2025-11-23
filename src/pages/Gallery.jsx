@@ -5,7 +5,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
+import { SERVER_URL } from "../services/serverURL";
 
 function Gallery() {
   const [photos, setPhotos] = useState([]);
