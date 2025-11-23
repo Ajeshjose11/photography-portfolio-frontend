@@ -2,25 +2,33 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { FiSearch, FiUser, FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { getUsersAPI } from "../services/allAPIs";
 
 function Users() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
 
+
+
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/users")
-      .then((res) => {
-        const allUsers = res.data;
-        const normalUsers = allUsers.filter((user) => user.role === "user");
-        setUsers(normalUsers);
-        setFilteredUsers(normalUsers);
-      })
-      .catch((err) => console.error("Error fetching users:", err));
+    fetchUsers();
   }, []);
 
-  
+  const fetchUsers = async () => {
+    try {
+      const allUsers = await getUsersAPI(); 
+
+      const normalUsers = allUsers.filter((user) => user.role === "user");
+      setUsers(normalUsers);
+      setFilteredUsers(normalUsers);
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
+  };
+
+
+
   const handleSearch = () => {
     const query = search.toLowerCase();
 
@@ -53,7 +61,7 @@ function Users() {
         Registered Users
       </h1>
 
-     
+
       <div className="flex items-center w-full max-w-md bg-gray-800 rounded-lg px-4 py-2 mb-8 border border-gray-700 focus-within:border-blue-400 transition">
         <FiSearch className="text-gray-400 mr-2" />
         <input
@@ -71,7 +79,7 @@ function Users() {
         </button>
       </div>
 
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-5xl">
         {filteredUsers.length > 0 ? (
           filteredUsers.map((user) => (
