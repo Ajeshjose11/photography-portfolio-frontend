@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { getUsersAPI, addUserAPI } from "../services/allAPIs";
+
 
 function Register() {
   const [name, setName] = useState("");
@@ -12,16 +14,19 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    toast.info("Contacting server… Please wait.", { position: "top-center" });
+
     try {
-      const res = await axios.get("http://localhost:3000/users");
-      const existing = res.data.find((u) => u.email === email);
+      const res = await getUsersAPI();
+      const users = res.data;
+
+      const existing = users.find((u) => u.email === email);
 
       if (existing) {
         toast.warn("⚠️ Email already registered!", { position: "top-center" });
       } else {
         const newUser = { name, email, password, role: "user" };
-        await axios.post("http://localhost:3000/users", newUser);
-
+        await addUserAPI(newUser);
         localStorage.setItem("currentUser", JSON.stringify(newUser));
 
         toast.success("🎉 Registration successful! Redirecting...", {
@@ -41,11 +46,12 @@ function Register() {
   };
 
   return (
+    <>
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-gray-800 text-white px-6">
       <ToastContainer />
       <div className="w-full max-w-md bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-8">
         <h2 className="text-3xl font-semibold text-center mb-6 text-blue-300">
-          Create Account 
+          Create Account
         </h2>
 
         <form onSubmit={handleRegister} className="space-y-4">
@@ -95,6 +101,7 @@ function Register() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
