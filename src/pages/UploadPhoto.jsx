@@ -4,7 +4,6 @@ import { FiUpload, FiEdit, FiTrash2, FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { SERVER_URL } from "../services/serverURL";
 
-
 function UploadPhoto() {
   const [photos, setPhotos] = useState([]);
   const [email, setEmail] = useState("");
@@ -13,10 +12,18 @@ function UploadPhoto() {
   const [editId, setEditId] = useState(null);
 
  
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
   const fetchPhotos = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/photos`);
-      setPhotos(res.data);
+
+      
+      const userPhotos = res.data.filter(
+        (p) => p.userId === currentUser?.id
+      );
+
+      setPhotos(userPhotos);
     } catch (err) {
       console.error("Error fetching photos:", err);
     }
@@ -26,7 +33,6 @@ function UploadPhoto() {
     fetchPhotos();
   }, []);
 
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -35,7 +41,18 @@ function UploadPhoto() {
       return;
     }
 
-    const newPhoto = { email, image, tag };
+    if (!currentUser) {
+      alert("❌ User not logged in!");
+      return;
+    }
+
+    
+    const newPhoto = {
+      userId: currentUser.id,
+      email,
+      image,
+      tag,
+    };
 
     try {
       if (editId) {
@@ -57,7 +74,6 @@ function UploadPhoto() {
     }
   };
 
-  
   const handleEdit = (photo) => {
     setEditId(photo.id);
     setEmail(photo.email);
@@ -65,7 +81,6 @@ function UploadPhoto() {
     setTag(photo.tag);
   };
 
-  
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this photo?")) {
       try {
@@ -79,7 +94,6 @@ function UploadPhoto() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white px-6 md:px-16 py-10">
-      
       <div className="absolute top-6 left-6">
         <Link
           to="/adminhome"
@@ -90,9 +104,8 @@ function UploadPhoto() {
         </Link>
       </div>
 
-      
       <h1 className="text-4xl font-serif text-blue-400 text-center mb-10">
-         Admin Dashboard
+        Admin Dashboard
       </h1>
 
       <form
@@ -138,7 +151,6 @@ function UploadPhoto() {
         </button>
       </form>
 
-      
       <h2 className="text-2xl font-semibold mb-4">Client Photo Gallery</h2>
       {photos.length === 0 ? (
         <p className="text-gray-400">No photos uploaded yet.</p>

@@ -13,17 +13,23 @@ function Gallery() {
   const [filteredPhotos, setFilteredPhotos] = useState([]);
   const galleryRef = useRef();
 
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
   useEffect(() => {
     axios
       .get(`${SERVER_URL}/photos`)
       .then((res) => {
-        const data = Array.isArray(res.data) ? res.data : res.data.data || [];
-        setPhotos(data);
-        setFilteredPhotos(data); 
+        const allPhotos = Array.isArray(res.data) ? res.data : [];
+
+        const userPhotos = allPhotos.filter(
+          (p) => p.userId === currentUser?.id
+        );
+
+        setPhotos(userPhotos);
+        setFilteredPhotos(userPhotos);
       })
       .catch((err) => console.error("Error fetching gallery:", err));
   }, []);
-
 
   const handleSearch = () => {
     const query = search.trim().toLowerCase();
@@ -37,9 +43,12 @@ function Gallery() {
       const location = p.location?.toLowerCase() || "";
       const date = p.date?.toLowerCase() || "";
       return (
-        event.includes(query) || location.includes(query) || date.includes(query)
+        event.includes(query) ||
+        location.includes(query) ||
+        date.includes(query)
       );
     });
+
     setFilteredPhotos(filtered);
   };
 
@@ -49,12 +58,10 @@ function Gallery() {
       return;
     }
 
-    
     const tempDiv = document.createElement("div");
     tempDiv.style.padding = "20px";
     tempDiv.style.backgroundColor = "#111827";
 
-    
     filteredPhotos.forEach((photo) => {
       const imgWrapper = document.createElement("div");
       imgWrapper.style.marginBottom = "20px";
@@ -116,67 +123,68 @@ function Gallery() {
 
   return (
     <>
-    <Header/>
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 px-6">
-      <h1 className="text-3xl font-bold text-blue-400 text-center mb-6">
-        User Gallery 
-      </h1>
+      <Header />
+      <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10 px-6">
+        <h1 className="text-3xl font-bold text-blue-400 text-center mb-6">
+          User Gallery
+        </h1>
 
-      <div className="flex w-full max-w-md bg-gray-800 rounded-lg px-4 py-2 mb-6 border border-gray-700 focus-within:border-blue-400 transition">
-        <FiSearch className="text-gray-400 mr-2 mt-1" />
-        <input
-          type="text"
-          placeholder="Search by event, location, or date..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="bg-transparent outline-none w-full text-gray-200 placeholder-gray-500"
-        />
+        <div className="flex w-full max-w-md bg-gray-800 rounded-lg px-4 py-2 mb-6 border border-gray-700 focus-within:border-blue-400 transition">
+          <FiSearch className="text-gray-400 mr-2 mt-1" />
+          <input
+            type="text"
+            placeholder="Search by event, location, or date..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-transparent outline-none w-full text-gray-200 placeholder-gray-500"
+          />
+          <button
+            onClick={handleSearch}
+            className="ml-3 bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md text-white"
+          >
+            Search
+          </button>
+        </div>
+
         <button
-          onClick={handleSearch}
-          className="ml-3 bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-md text-white"
+          onClick={handleDownloadPDF}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full mb-6 transition"
         >
-          Search
+          <FiDownload /> Download as PDF
         </button>
-      </div>
 
-      
-      <button
-        onClick={handleDownloadPDF}
-        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full mb-6 transition"
-      >
-        <FiDownload /> Download as PDF
-      </button>
-
-      <div
-        ref={galleryRef}
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
-      >
-        {filteredPhotos.length > 0 ? (
-          filteredPhotos.map((photo) => (
-            <div
-              key={photo.id || photo._id}
-              className="bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:border-blue-400 transition"
-            >
-              <img
-                src={photo.image}
-                alt={photo.event || "Event"}
-                className="w-full h-56 object-cover rounded-lg mb-3"
-              />
-              <h2 className="text-lg font-semibold text-blue-400">
-                {photo.event || "Unnamed Event"}
-              </h2>
-              <p className="text-gray-300">📍 {photo.location || "Unknown"}</p>
-              <p className="text-gray-400">📅 {photo.date || "N/A"}</p>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-400 text-center col-span-full">
-            No images found.
-          </p>
-        )}
+        <div
+          ref={galleryRef}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-6xl"
+        >
+          {filteredPhotos.length > 0 ? (
+            filteredPhotos.map((photo) => (
+              <div
+                key={photo.id || photo._id}
+                className="bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:border-blue-400 transition"
+              >
+                <img
+                  src={photo.image}
+                  alt={photo.event || "Event"}
+                  className="w-full h-56 object-cover rounded-lg mb-3"
+                />
+                <h2 className="text-lg font-semibold text-blue-400">
+                  {photo.event || "Unnamed Event"}
+                </h2>
+                <p className="text-gray-300">
+                  📍 {photo.location || "Unknown"}
+                </p>
+                <p className="text-gray-400">📅 {photo.date || "N/A"}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-400 text-center col-span-full">
+              No images found.
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-    <Footer/>
+      <Footer />
     </>
   );
 }
