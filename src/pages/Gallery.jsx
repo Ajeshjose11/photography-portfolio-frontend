@@ -22,7 +22,7 @@ function Gallery() {
         const allPhotos = Array.isArray(res.data) ? res.data : [];
 
         const userPhotos = allPhotos.filter(
-          (p) => p.userId === currentUser?.id
+          (p) => String(p.userId) === String(currentUser?.id)
         );
 
         setPhotos(userPhotos);
@@ -76,9 +76,8 @@ function Gallery() {
       imgWrapper.appendChild(img);
 
       const text = document.createElement("p");
-      text.textContent = `${photo.event || "Event"} • ${
-        photo.location || "Unknown"
-      } • ${photo.date || "N/A"}`;
+      text.textContent = `${photo.event || "Event"} • ${photo.location || "Unknown"
+        } • ${photo.date || "N/A"}`;
       text.style.color = "#fff";
       text.style.marginTop = "6px";
       imgWrapper.appendChild(text);

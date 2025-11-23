@@ -17,8 +17,6 @@ function UploadPhoto() {
   const fetchPhotos = async () => {
     try {
       const res = await axios.get(`${SERVER_URL}/photos`);
-
-      
       const userPhotos = res.data.filter(
         (p) => p.userId === currentUser?.id
       );
@@ -48,7 +46,7 @@ function UploadPhoto() {
 
     
     const newPhoto = {
-      userId: currentUser.id,
+      userId: Number(currentUser.id),
       email,
       image,
       tag,

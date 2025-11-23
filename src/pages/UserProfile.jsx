@@ -74,7 +74,7 @@ function UserProfile() {
     const base64Image = await toBase64(file);
 
     const newPhoto = {
-      userId: id,
+      userId: Number(id),
       image: base64Image,
       event,
       date,
