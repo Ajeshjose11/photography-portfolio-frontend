@@ -17,14 +17,14 @@ function Register() {
     toast.info("Contacting server… Please wait.", { position: "top-center" });
 
     try {
-      const res = await getUsersAPI();
-      const users = res.data;
-
+      const users = await getUsersAPI();
+      
       const existing = users.find((u) => u.email === email);
 
       if (existing) {
         toast.warn("⚠️ Email already registered!", { position: "top-center" });
-      } else {
+      } 
+      else {
         const newUser = { name, email, password, role: "user" };
         await addUserAPI(newUser);
         localStorage.setItem("currentUser", JSON.stringify(newUser));
