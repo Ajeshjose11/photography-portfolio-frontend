@@ -7,7 +7,7 @@ function Header() {
       <h1 className="text-xl font-semibold tracking-wide">Robert Lean</h1>
 
       <nav className="flex gap-8">
-        <a href="/" className="hover:text-blue-400">Home</a>
+        <a href="/home" className="hover:text-blue-400">Home</a>
         <a href="/about" className="hover:text-blue-400">About</a>
         <a href="/portfolio" className="hover:text-blue-400">Portfolio</a>
         <a href="/gallery" className="hover:text-blue-400">Gallery</a>
