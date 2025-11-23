@@ -15,7 +15,7 @@ function Gallery() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/photos")
+      .get(`${SERVER_URL}/photos`)
       .then((res) => {
         const data = Array.isArray(res.data) ? res.data : res.data.data || [];
         setPhotos(data);
@@ -24,7 +24,7 @@ function Gallery() {
       .catch((err) => console.error("Error fetching gallery:", err));
   }, []);
 
-  
+
   const handleSearch = () => {
     const query = search.trim().toLowerCase();
     if (query === "") {

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { SERVER_URL } from "../services/serverURL";
+
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -17,7 +19,7 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/messages", formData);
+      await axios.post(`${SERVER_URL}/messages`, formData);
       alert("✅ Message sent successfully!");
       setFormData({ name: "", email: "", message: "" });
     } catch (err) {

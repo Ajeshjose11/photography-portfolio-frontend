@@ -10,13 +10,14 @@ import {
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { SERVER_URL } from "../services/serverURL";
 
 function Messages() {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/messages")
+      .get(`${SERVER_URL}/messages`)
       .then((res) => setMessages(res.data))
       .catch((err) => console.error("Error fetching messages:", err));
   }, []);
@@ -27,7 +28,7 @@ function Messages() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3000/messages/${id}`);
+      await axios.delete(`${SERVER_URL}/messages/${id}`);
       setMessages(messages.filter((msg) => msg.id !== id));
       toast.success("🗑️ Message deleted successfully!", {
         position: "top-center",

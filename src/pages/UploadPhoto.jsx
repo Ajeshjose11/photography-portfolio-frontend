@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiUpload, FiEdit, FiTrash2, FiArrowLeft } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { SERVER_URL } from "../services/serverURL";
+
 
 function UploadPhoto() {
   const [photos, setPhotos] = useState([]);
@@ -13,7 +15,7 @@ function UploadPhoto() {
  
   const fetchPhotos = async () => {
     try {
-      const res = await axios.get("http://localhost:3000/photos");
+      const res = await axios.get(`${SERVER_URL}/photos`);
       setPhotos(res.data);
     } catch (err) {
       console.error("Error fetching photos:", err);
@@ -37,10 +39,10 @@ function UploadPhoto() {
 
     try {
       if (editId) {
-        await axios.put(`http://localhost:3000/photos/${editId}`, newPhoto);
+        await axios.put(`${SERVER_URL}/photos/${editId}`, newPhoto);
         alert("Photo details updated!");
       } else {
-        await axios.post("http://localhost:3000/photos", newPhoto);
+        await axios.post(`${SERVER_URL}/photos`, newPhoto);
         alert("Photo uploaded successfully!");
       }
 
@@ -67,7 +69,7 @@ function UploadPhoto() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this photo?")) {
       try {
-        await axios.delete(`http://localhost:3000/photos/${id}`);
+        await axios.delete(`${SERVER_URL}/photos/${id}`);
         fetchPhotos();
       } catch (err) {
         console.error("Error deleting:", err);
