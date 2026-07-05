@@ -9,6 +9,7 @@ function AdminHome() {
       <div className="absolute top-6 right-6">
         <Link
           to="/"
+          onClick={() => localStorage.removeItem("currentUser")}
           className="flex bg-red-500 hover:bg-red-600 px-5 py-2 text-white transition-transform duration-300 hover:scale-105"
         >
           <span>Logout</span>

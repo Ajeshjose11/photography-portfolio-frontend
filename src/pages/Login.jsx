@@ -14,8 +14,8 @@ function Login() {
     try {
       const users = await getUsersAPI();
 
-      if (!users) {
-        toast.error("⚠️ Server not running. Please start JSON Server!", {
+      if (!Array.isArray(users)) {
+        toast.error("⚠️ Server not running. Start JSON Server on port 3000!", {
           position: "top-center",
         });
         return;
@@ -31,7 +31,7 @@ function Login() {
 
         setTimeout(() => {
           if (user.role === "admin") {
-            window.location.href = "/adminHome";
+            window.location.href = "/adminhome";
           } else {
             window.location.href = "/home";
           }

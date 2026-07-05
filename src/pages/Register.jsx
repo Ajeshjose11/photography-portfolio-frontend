@@ -18,7 +18,14 @@ function Register() {
 
     try {
       const users = await getUsersAPI();
-      
+
+      if (!Array.isArray(users)) {
+        toast.error("⚠️ Server not running. Start JSON Server on port 3000!", {
+          position: "top-center",
+        });
+        return;
+      }
+
       const existing = users.find((u) => u.email === email);
 
       if (existing) {

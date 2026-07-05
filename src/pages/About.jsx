@@ -10,7 +10,7 @@ function About() {
     <section className="bg-[#1e1e1e] text-gray-200 min-h-screen flex flex-col items-center justify-center px-6 md:px-20 py-16">
       <div className="max-w-4xl text-center mb-10">
         <h2 className="text-3xl md:text-4xl font-serif text-white mb-6">
-          Hello, I’m <span className="text-blue-400">Robert Lean</span> — a portrait and lifestyle photographer 
+          Hello, I’m <span className="text-blue-400">Ajesh Jose</span> — a portrait and lifestyle photographer 
           capturing raw emotions and beautiful moments from India.
         </h2>
       </div>

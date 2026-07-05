@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 function Header() {
   return (
     <header className="bg-[#1e293b] text-white py-9 px-8 flex justify-between items-center relative z-50">
-      <h1 className="text-xl font-semibold tracking-wide">Robert Lean</h1>
+      <h1 className="text-xl font-semibold tracking-wide">Ajesh Jose</h1>
 
       <nav className="flex gap-8">
         <a href="/home" className="hover:text-blue-400">Home</a>
@@ -16,7 +16,7 @@ function Header() {
       </nav>
 
       <div className="flex items-center gap-4">
-        <Link to="/">
+        <Link to="/" onClick={() => localStorage.removeItem("currentUser")}>
           <button className="bg-red-500 hover:bg-red-600 px-4 py-1 text-white transition-transform duration-300 hover:scale-105">
             Log Out
           </button>

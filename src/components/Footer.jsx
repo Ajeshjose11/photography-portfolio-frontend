@@ -64,7 +64,7 @@ function Footer() {
       </div>
 
       <div className="border-t border-gray-700 mt-10 pt-2 text-center text-sm text-blue-300">
-        © 2025 Robert Lean Photography. All rights reserved.
+        © 2026 Ajesh Jose Photography. All rights reserved.
       </div>
     </footer>
   );
